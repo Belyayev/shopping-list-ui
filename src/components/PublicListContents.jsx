@@ -21,16 +21,16 @@ const PublicListContents = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = { email: "public" };
-
   const [showBought, setShowBought] = useState(false);
-
   const { selectedList, isLoading, isError, message } = useSelector(
     (state) => state.lists
   );
 
   useEffect(() => {
     dispatch(getPublicList(id));
+  }, [dispatch, id]);
 
+  useEffect(() => {
     if (message === "List not found") {
       toast.error(message);
       navigate("/login");
@@ -39,7 +39,7 @@ const PublicListContents = () => {
     return () => {
       dispatch(reset());
     };
-  }, [navigate, dispatch, id, isError, message]);
+  }, [message, navigate, dispatch]);
 
   let itemList;
   let listGroups = [];
