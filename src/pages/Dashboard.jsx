@@ -19,21 +19,22 @@ function Dashboard() {
   );
 
   useEffect(() => {
-    if (isError) {
+    if (isError && message) {
       toast.error(message);
     }
 
     if (!user) {
       navigate("/login");
     }
+  }, [isError, message, user, navigate]);
 
-    dispatch(getLists());
-    if (user) dispatch(getSharedLists({ email: user.email }));
-
-    // return () => {
-    //   dispatch(reset());
-    // };
-  }, [user, navigate, isError, message, dispatch]);
+  useEffect(() => {
+    if (user) {
+      dispatch(getLists());
+      dispatch(getSharedLists({ email: user.email }));
+    }
+    // No need to reset in this useEffect
+  }, [user, dispatch]);
 
   return (
     <>
