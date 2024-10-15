@@ -37,9 +37,10 @@ const SharedListContents = () => {
     }
 
     if (
-      message === "List not found" ||
-      message === "User not found" ||
-      message === "User not authorized"
+      isError &&
+      (message === "List not found" ||
+        message === "User not found" ||
+        message === "User not authorized")
     ) {
       toast.error(message);
       navigate("/login");
