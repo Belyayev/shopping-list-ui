@@ -368,6 +368,8 @@ export const listSlice = createSlice({
       })
       .addCase(createList.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.isError = false;
+        state.message = "";
         state.isSuccess = true;
         state.lists.push(action.payload);
       })
