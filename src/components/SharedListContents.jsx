@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 import { v4 as uuidv4 } from "uuid";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -14,14 +14,12 @@ import {
 import CreateItem from "./CreateItem";
 import Item from "./Item";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import Loader from "./Loader";
 
 const SharedListContents = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const { user } = useSelector((state) => state.auth);
   const { selectedList, isLoading, isError, message } = useSelector(
     (state) => state.lists
@@ -30,37 +28,32 @@ const SharedListContents = () => {
   useEffect(() => {
     if (!user) {
       navigate("/login");
-    }
-
-    if (user) {
+    } else {
       dispatch(getSharedList({ id, email: user.email }));
     }
+  }, [user, id, navigate, dispatch]);
 
-    if (
-      isError &&
-      (message === "List not found" ||
-        message === "User not found" ||
-        message === "User not authorized")
-    ) {
+  useEffect(() => {
+    if (isError && message) {
       toast.error(message);
-      navigate("/login");
+      if (message === "User not authorized") {
+        navigate("/login");
+      }
     }
 
     return () => {
       dispatch(reset());
     };
-  }, [user, navigate, dispatch, id, isError, message]);
+  }, [isError, message, navigate, dispatch]);
 
-  let payload = { id };
-
+  const payload = { id };
   let itemList;
-  let listGroups = [];
+  let listGroups = selectedList ? selectedList.groups : [];
 
-  if (selectedList) listGroups = selectedList.groups;
-
-  if (selectedList && selectedList.showBought)
+  if (selectedList && selectedList.showBought) {
     itemList = selectedList.items.map((item) => (
       <div
+        key={item._id}
         style={{
           display: listGroups.some(
             (e) => e.group === item.isle && !e.isSelected
@@ -69,20 +62,15 @@ const SharedListContents = () => {
             : "block",
         }}
       >
-        <Item
-          key={item._id}
-          id={id}
-          showBought={selectedList.showBought}
-          item={item}
-        />
+        <Item id={id} showBought={selectedList.showBought} item={item} />
       </div>
     ));
-
-  if (selectedList && !selectedList.showBought)
+  } else if (selectedList && !selectedList.showBought) {
     itemList = selectedList.items
       .filter((i) => !i.isBought)
       .map((item) => (
         <div
+          key={item._id}
           style={{
             display: listGroups.some(
               (e) => e.group === item.isle && !e.isSelected
@@ -91,17 +79,12 @@ const SharedListContents = () => {
               : "block",
           }}
         >
-          <Item
-            key={item._id}
-            id={id}
-            showBought={selectedList.showBought}
-            item={item}
-          />
+          <Item id={id} showBought={selectedList.showBought} item={item} />
         </div>
       ));
+  }
 
   const SortableItem = SortableElement(({ value }) => <div>{value}</div>);
-
   const SortableList = SortableContainer(({ items }) => {
     return (
       <div>
@@ -112,8 +95,8 @@ const SharedListContents = () => {
     );
   });
 
-  const updateItemsOrder = (params) => {
-    dispatch(sortList({ id, params }));
+  const updateItemsOrder = ({ oldIndex, newIndex }) => {
+    dispatch(sortList({ id, params: { oldIndex, newIndex } }));
   };
 
   return (
@@ -123,7 +106,7 @@ const SharedListContents = () => {
         {selectedList ? selectedList.listName : ""}
       </div>
       <div className="horizontal-margins">
-        <p>{`owned by: ${selectedList && selectedList.owner}`}</p>
+        <p>{`Owned by: ${selectedList ? selectedList.owner : ""}`}</p>
         {selectedList && selectedList.showBought ? (
           <button
             className="btn"
@@ -148,11 +131,10 @@ const SharedListContents = () => {
         <fieldset className="list-sharedwith">
           <legend>Display item groups:</legend>
           {listGroups.map(({ group, isSelected }, index) => (
-            <div className="list-sharedwith">
+            <div className="list-sharedwith" key={group}>
               <input
                 type="checkbox"
                 id={`custom-checkbox-${index}`}
-                key={group}
                 name={group}
                 value={group}
                 style={{ marginLeft: "0.5rem" }}
@@ -170,9 +152,7 @@ const SharedListContents = () => {
       {selectedList && (
         <SortableList
           items={itemList}
-          onSortEnd={(oldIndex, newIndex) =>
-            updateItemsOrder(oldIndex, newIndex)
-          }
+          onSortEnd={updateItemsOrder}
           useDragHandle
         />
       )}
