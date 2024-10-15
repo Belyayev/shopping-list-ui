@@ -1,23 +1,27 @@
 import axios from "axios";
 
-const API_URL = "/api/lists/";
-const SORT_URL = "/api/lists/sortlist/";
-const GROUP_URL = "/api/lists/groupcheck/";
-const SHOWBOUGHT_URL = "/api/lists/showbought/";
-const MAKEPRIVATE_URL = "/api/lists/makeprivate/";
-const ADDITEM_URL = "/api/lists/additem/";
-const UPDITEM_URL = "/api/lists/updateitem/";
-const BUYITEM_URL = "/api/lists/buyitem/";
-const DELETEITEM_URL = "/api/lists/deleteitem/";
-const ADDSHARE_URL = "/api/lists/addshare/";
-const DELETESHARE_URL = "/api/lists/deleteshare/";
-const SHARED_URL = "/api/shared/";
-const GETSHAREDLIST_URL = "/api/shared/";
-const PUBLIC_URL = "/api/public/";
-const PUBLICADDITEM_URL = "/api/public/additem/";
-const PUBLICBUYITEM_URL = "/api/public/buyitem/";
-const PUBLICDELETEITEM_URL = "/api/public/deleteitem/";
-const PUBLICUPDITEM_URL = "/api/public/updateitem/";
+// Base URL
+const API_BASE_URL = "https://shopping-list-api-psi.vercel.app/api/";
+
+// Endpoints
+const API_URL = `${API_BASE_URL}lists/`;
+const SORT_URL = `${API_BASE_URL}lists/sortlist/`;
+const GROUP_URL = `${API_BASE_URL}lists/groupcheck/`;
+const SHOWBOUGHT_URL = `${API_BASE_URL}lists/showbought/`;
+const MAKEPRIVATE_URL = `${API_BASE_URL}lists/makeprivate/`;
+const ADDITEM_URL = `${API_BASE_URL}lists/additem/`;
+const UPDITEM_URL = `${API_BASE_URL}lists/updateitem/`;
+const BUYITEM_URL = `${API_BASE_URL}lists/buyitem/`;
+const DELETEITEM_URL = `${API_BASE_URL}lists/deleteitem/`;
+const ADDSHARE_URL = `${API_BASE_URL}lists/addshare/`;
+const DELETESHARE_URL = `${API_BASE_URL}lists/deleteshare/`;
+const SHARED_URL = `${API_BASE_URL}shared/`;
+const GETSHAREDLIST_URL = `${API_BASE_URL}shared/`;
+const PUBLIC_URL = `${API_BASE_URL}public/`;
+const PUBLICADDITEM_URL = `${API_BASE_URL}public/additem/`;
+const PUBLICBUYITEM_URL = `${API_BASE_URL}public/buyitem/`;
+const PUBLICDELETEITEM_URL = `${API_BASE_URL}public/deleteitem/`;
+const PUBLICUPDITEM_URL = `${API_BASE_URL}public/updateitem/`;
 
 // Create new list
 const createList = async (listData, token) => {
