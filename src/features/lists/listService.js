@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Base URL
-const API_BASE_URL = "https://shopping-list-api-psi.vercel.app/api/";
+const API_BASE_URL = "https://free-shopping-list-api.vercel.app/api/";
 
 // Endpoints
 const API_URL = `${API_BASE_URL}lists/`;
