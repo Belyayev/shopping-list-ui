@@ -30,9 +30,9 @@ function Dashboard() {
     dispatch(getLists());
     if (user) dispatch(getSharedLists({ email: user.email }));
 
-    return () => {
-      dispatch(reset());
-    };
+    // return () => {
+    //   dispatch(reset());
+    // };
   }, [user, navigate, isError, message, dispatch]);
 
   return (
